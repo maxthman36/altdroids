@@ -15,10 +15,11 @@ const int REVERSE = 1;
 const int RIGHT = 2;
 const int LEFT = 3;
 
-const double VARIANCE_CONSIDERED_STUCK = .05; // Higher the number the more he thinks he's stuck
-const int AMBIENT_LIGHT = 50; //Raise this number if he doesn't recognize opsticals
-const double STRAIGHTNESS = .25;//Higher the number, the less he will turn.
+const double VARIANCE_CONSIDERED_STUCK = .15;
+const int AMBIENT_LIGHT = 60; // This equals 60% of the low found on the app on max's phone.
+const double STRAIGHTNESS = .4;
 const int BRIGHT_LIGHT = 750; //If there is bright light, we will steer away from it if we don't have a ball. 
+
 
 int rightSensorReading = 0;
 int leftSensorReading = 0; 
@@ -55,7 +56,7 @@ void loop() {
   else
   hasBall=false;
 
-//hasBall=false; //COMMENT THIS OUT LATER
+  hasBall=false; //COMMENT THIS OUT LATER
 
   //This is where we Decide what the robot will do next after the sensor data is collected
 
@@ -124,7 +125,6 @@ void loop() {
   }
 
 
-//dir = REVERSE; 
 
   switch (dir)
   {
@@ -154,12 +154,12 @@ void loop() {
     case RIGHT:
           myservoRight.write(180);  
           myservoLeft.write(180); 
-          delay(200);
+          delay(100);
     break;
     case LEFT:
-          myservoRight.write(90);  
-          myservoLeft.write(90);  
-          delay(200);
+          myservoRight.write(0);  
+          myservoLeft.write(0);  
+          delay(100);
     break;
   }
 }
