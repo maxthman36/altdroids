@@ -18,8 +18,8 @@ const int LEFT = 3;
 const double VARIANCE_CONSIDERED_STUCK = .15;
 const int AMBIENT_LIGHT = 60; // This equals 60% of the low found on the app on max's phone.
 const double STRAIGHTNESS = .4;
-const int BRIGHT_LIGHT = 750; //If there is bright light, we will steer away from it if we don't have a ball. 
-
+const int BRIGHT_LIGHT = 600; //If there is bright light, we will steer away from it if we don't have a ball. 
+const int SUPER_BRIGHT_LIGHT = 800;
 
 int rightSensorReading = 0;
 int leftSensorReading = 0; 
@@ -51,12 +51,23 @@ void loop() {
   leftSensorReading = analogRead(LEFTSENSOR);
   insideSensorReading = analogRead(INTERNALSENSOR);
 
-  if(insideSensorReading < baselineInternalReading && !withinPercentage(insideSensorReading, baselineInternalReading, .01)) //if light in bay dims, there is a ball in the bay
+  if(insideSensorReading<baselineInternalReading && !hasBall)
+   hasBall =true;
+     
+  if(withinPercentage(insideSensorReading, baselineInternalReading, .2) && !hasBall)
+   baselineInternalReading = insideSensorReading;
+
+  if(rightSensorReading > SUPER_BRIGHT_LIGHT || leftSensorReading > SUPER_BRIGHT_LIGHT)
+    hasBall = false;
+
+  
+/*
+  if(insideSensorReading < baselineInternalReading) //if light in bay dims, there is a ball in the bay
   hasBall=true;
   else
   hasBall=false;
-
-  hasBall=false; //COMMENT THIS OUT LATER
+*/
+//  hasBall=true; //COMMENT THIS OUT LATER
 
   //This is where we Decide what the robot will do next after the sensor data is collected
 
@@ -155,11 +166,13 @@ void loop() {
           myservoRight.write(180);  
           myservoLeft.write(180); 
           delay(100);
+          if(!hasBall)delay(random(100, 500));
     break;
     case LEFT:
           myservoRight.write(0);  
           myservoLeft.write(0);  
           delay(100);
+          if(!hasBall)delay(random(100, 500));
     break;
   }
 }
